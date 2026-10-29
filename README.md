@@ -1,0 +1,103 @@
+# BotProxyBridge
+
+Локальный HTTP-фасад под [Telegram Bot API](https://core.telegram.org/bots/api). Снаружи бот ходит как на `api.telegram.org`, внутри — [Telethon](https://github.com/LonamiWebs/Telethon) через [tg-ws-proxy](https://github.com/Flowseal/tg-ws-proxy) (MTProto).
+
+Задуман под **aiogram** (и вообще Bot API-клиенты: PTB, httpx): когда с сервера HTTPS к Telegram мёртв, а MTProto через прокси жив — бот продолжает слать обычные `bot.send_message` / polling, без переписывания на Telethon.
+
+> Проект написан нейросетью.
+
+```
+bot  →  :8096 BotProxyBridge  →  Telethon  →  :1443 tg-ws-proxy  →  Telegram
+```
+
+[Установка](#установка) · [Требования](#требования) · [Подключение бота](#подключение-бота) · [Методы](#методы) · [Промпт для AI](AI_INSTALL_PROMPT.md) · [Подробнее](INSTALL.md)
+
+## Требования
+
+- Linux, Python **3.11+**, systemd, sudo
+- Рабочий **tg-ws-proxy** (MTProto) на `127.0.0.1:1443` — не SOCKS5 под Bot API
+- `api_id` / `api_hash` с [my.telegram.org/apps](https://my.telegram.org/apps)
+- Токены ботов для `ALLOWED_BOT_TOKENS`
+- Порты по умолчанию: **1443** (прокси), **8096** (мост)
+
+## Установка
+
+Полный разбор: [INSTALL.md](INSTALL.md).
+
+```bash
+# 1) tg-ws-proxy уже слушает 127.0.0.1:1443, secret в /etc/tg-ws-proxy/secret (или в .env)
+
+# 2) мост
+git clone https://github.com/argentezzy/botproxybridge.git /opt/botproxybridge
+cd /opt/botproxybridge
+chmod +x scripts/install.sh
+sudo ./scripts/install.sh
+sudo nano /opt/botproxybridge/.env   # см. .env.example
+sudo systemctl restart botproxybridge
+curl -sS http://127.0.0.1:8096/health
+curl -sS "http://127.0.0.1:8096/bot<TOKEN>/getMe"
+```
+
+## Подключение бота
+
+```env
+TELEGRAM_API_BASE=http://127.0.0.1:8096
+TELEGRAM_PROXY_URL=
+```
+
+Docker — не `127.0.0.1`, а хост:
+
+```yaml
+extra_hosts:
+  - "host.docker.internal:host-gateway"
+```
+
+```env
+TELEGRAM_API_BASE=http://host.docker.internal:8096
+```
+
+python-telegram-bot:
+
+```python
+Application.builder().token(TOKEN).base_url(f"{API_BASE}/bot").base_file_url(f"{API_BASE}/file/bot").build()
+```
+
+## Методы
+
+Сейчас: `getMe`, `getUpdates`, `sendMessage`, `editMessageText`, `deleteMessage`, `answerCallbackQuery`, `setMyCommands`, `sendDocument`, `sendPhoto`, `getFile` (+ `/file/bot…`), `getChat`, заглушки webhook.
+
+Остальное — в `app/methods.py` по мере надобности. Входящие апдейты из Telethon events, не из официального long-poll.
+
+## Промпт для AI
+
+Готовый текст для Cursor/Codex: **[AI_INSTALL_PROMPT.md](AI_INSTALL_PROMPT.md)** — вставить агенту, подставить SSH/`api_id`/токены, не светить секреты в чат.
+
+Коротко:
+
+```text
+Поставь https://github.com/argentezzy/botproxybridge по INSTALL.md.
+tg-ws-proxy :1443 уже есть (или поставь). Подключи боты к
+TELEGRAM_API_BASE=http://host.docker.internal:8096, TELEGRAM_PROXY_URL очисти.
+Секреты не печатай. В конце — status + getMe.
+```
+
+## Файлы
+
+| | |
+|---|---|
+| [INSTALL.md](INSTALL.md) | установка, Docker, отладка |
+| [AI_INSTALL_PROMPT.md](AI_INSTALL_PROMPT.md) | промпт агенту |
+| [.env.example](.env.example) | конфиг |
+| [scripts/install.sh](scripts/install.sh) | инсталлятор |
+| [deploy/botproxybridge.service](deploy/botproxybridge.service) | systemd |
+
+## Thanks
+
+- [Telethon](https://github.com/LonamiWebs/Telethon) — MTProto
+- [Flowseal/tg-ws-proxy](https://github.com/Flowseal/tg-ws-proxy), [tg-ws-proxy-go](https://github.com/spatiumstas/tg-ws-proxy-go) — туннель
+- [aiohttp](https://github.com/aio-libs/aiohttp) — HTTP
+- [Telegram Bot API](https://core.telegram.org/bots/api)
+
+## License
+
+[MIT](LICENSE). Неофициальный инструмент, не связан с Telegram. Соблюдайте [ToS](https://telegram.org/tos), не коммитьте `.env` и session-файлы.

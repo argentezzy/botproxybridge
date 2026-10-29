@@ -1,0 +1,18 @@
+[Unit]
+Description=BotProxyBridge — Telegram Bot API over Telethon/MTProto
+After=network-online.target tg-ws-proxy.service
+Wants=network-online.target
+# Optional dependency if tg-ws-proxy is installed as systemd unit:
+# Wants=tg-ws-proxy.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/botproxybridge
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/botproxybridge/venv/bin/python -m app.main
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
