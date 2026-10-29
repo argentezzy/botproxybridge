@@ -22,20 +22,19 @@ bot  →  :8096 BotProxyBridge  →  Telethon  →  :1443 tg-ws-proxy  →  Tele
 
 ## Что скачать
 
-`install.sh` **не** качает tg-ws-proxy. Ссылки списком: **[DEPENDENCIES.md](DEPENDENCIES.md)**.
+Ссылки: **[DEPENDENCIES.md](DEPENDENCIES.md)**.
 
-| Обязательно | URL |
+По умолчанию `install.sh` (`WITH_TG_WS_PROXY=auto`) сам ставит [Flowseal tg-ws-proxy](https://github.com/Flowseal/tg-ws-proxy) CLI, если **:1443 свободен**. Свой прокси на этом порту не трогает.
+
+| | URL |
 |---|---|
 | tg-ws-proxy | https://github.com/Flowseal/tg-ws-proxy |
 | релизы | https://github.com/Flowseal/tg-ws-proxy/releases |
-| CLI из исходников | https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md |
+| CLI / BuildFromSource | https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md |
 | api_id / api_hash | https://my.telegram.org/apps |
 | BotProxyBridge | https://github.com/argentezzy/botproxybridge |
-| Telethon / aiohttp | через `pip` из [`requirements.txt`](requirements.txt) |
-
-Опционально (Go-порт): https://github.com/spatiumstas/tg-ws-proxy-go
-
-`install.sh` по умолчанию (`WITH_TG_WS_PROXY=auto`) сам ставит Flowseal CLI, если порт **1443 свободен**. Если прокси уже есть — не трогает.
+| Telethon / aiohttp | `pip` из [`requirements.txt`](requirements.txt) |
+| Go-порт (опц.) | https://github.com/spatiumstas/tg-ws-proxy-go |
 
 ## Установка
 
@@ -91,10 +90,10 @@ Application.builder().token(TOKEN).base_url(f"{API_BASE}/bot").base_file_url(f"{
 Коротко:
 
 ```text
-Поставь https://github.com/argentezzy/botproxybridge по INSTALL.md.
-tg-ws-proxy :1443 уже есть (или поставь). Подключи боты к
-TELEGRAM_API_BASE=http://host.docker.internal:8096, TELEGRAM_PROXY_URL очисти.
-Секреты не печатай. В конце — status + getMe.
+Поставь https://github.com/argentezzy/botproxybridge по INSTALL.md
+(sudo ./scripts/install.sh — auto поставит tg-ws-proxy, если :1443 свободен).
+Подключи боты к TELEGRAM_API_BASE=http://host.docker.internal:8096,
+TELEGRAM_PROXY_URL очисти. Секреты не печатай. В конце — status + getMe.
 ```
 
 ## Файлы

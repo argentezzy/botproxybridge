@@ -12,16 +12,15 @@
 
 ---
 
-## 1. Установить tg-ws-proxy (MTProto)
+## 1. tg-ws-proxy (MTProto)
 
-Без MTProto на `:1443` Telethon не достучится до DC.  
-Полный список ссылок: [DEPENDENCIES.md](DEPENDENCIES.md).
+Без MTProto на `:1443` Telethon не достучится до DC. Ссылки: [DEPENDENCIES.md](DEPENDENCIES.md).
 
-**Авто:** `sudo ./scripts/install.sh` при свободном `:1443` сам клонирует  
-https://github.com/Flowseal/tg-ws-proxy и поднимает `tg-ws-proxy.service`  
-(`scripts/install-tg-ws-proxy.sh`). Secret → `/etc/tg-ws-proxy/secret`, подтягивается в `.env`.
+Обычный путь — сразу к [§3](#3-установка-моста): `install.sh` при свободном `:1443` сам клонирует  
+https://github.com/Flowseal/tg-ws-proxy, поднимает `tg-ws-proxy.service`, пишет secret в  
+`/etc/tg-ws-proxy/secret` и подтягивает в `.env`.
 
-Ручная установка — ниже.
+Ручная установка (если auto отключён или нужен свой бинарь) — ниже.
 
 ### Ссылки
 

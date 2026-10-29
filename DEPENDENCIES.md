@@ -36,10 +36,17 @@ Python-зависимости моста подтянет `pip` из [`requireme
 
 ## Минимальный путь на Linux (сервер)
 
-1. Поставить **tg-ws-proxy** (релиз или CLI):
-   - релизы: https://github.com/Flowseal/tg-ws-proxy/releases  
-   - или из исходников: https://github.com/Flowseal/tg-ws-proxy + [BuildFromSource](https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md)
-2. Слушать `127.0.0.1:1443`, secret сохранить (например `/etc/tg-ws-proxy/secret`)
-3. Взять `api_id`/`api_hash`: https://my.telegram.org/apps
-4. Клонировать мост: https://github.com/argentezzy/botproxybridge  
-   → `sudo ./scripts/install.sh`
+1. `api_id` / `api_hash`: https://my.telegram.org/apps  
+2. Токены: [@BotFather](https://t.me/BotFather)  
+3. Клонировать мост и поставить всё сразу:
+
+```bash
+git clone https://github.com/argentezzy/botproxybridge.git /opt/botproxybridge
+cd /opt/botproxybridge && sudo ./scripts/install.sh
+# при свободном :1443 подтянет https://github.com/Flowseal/tg-ws-proxy
+```
+
+4. Дописать в `/opt/botproxybridge/.env`: `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, `ALLOWED_BOT_TOKENS`  
+5. `sudo systemctl restart botproxybridge`
+
+Ручной tg-ws-proxy (если auto не нужен): [релизы](https://github.com/Flowseal/tg-ws-proxy/releases) или [BuildFromSource](https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md).

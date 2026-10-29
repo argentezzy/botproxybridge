@@ -86,8 +86,9 @@ install.sh по умолчанию (WITH_TG_WS_PROXY=auto) сам ставит F
 ## Короткий вариант (если сервер и секреты уже в контексте агента)
 
 ```text
-Установи https://github.com/argentezzy/botproxybridge на этот сервер по INSTALL.md
-и AI_INSTALL_PROMPT.md из репозитория. Используй существующий tg-ws-proxy :1443.
-Подключи боты <имена/пути> к TELEGRAM_API_BASE=http://host.docker.internal:8096,
-прокси Telegram очисти. Секреты не печатай. В конце — статус и smoke-тест getMe.
+Установи https://github.com/argentezzy/botproxybridge по INSTALL.md
+(sudo ./scripts/install.sh — auto поставит tg-ws-proxy, если :1443 свободен;
+если прокси уже есть — не трогай). Подключи боты <пути> к
+TELEGRAM_API_BASE=http://host.docker.internal:8096, TELEGRAM_PROXY_URL очисти.
+Секреты не печатай. В конце — status + getMe.
 ```
