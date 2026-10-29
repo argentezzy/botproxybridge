@@ -3,6 +3,8 @@
 Скопируйте блок ниже целиком в Cursor / Codex / другого агента с доступом к серверу по SSH.  
 Подставьте свои значения в секции `СЕКРЕТЫ И ПАРАМЕТРЫ`.
 
+Ссылки «что скачать»: [DEPENDENCIES.md](DEPENDENCIES.md).
+
 ---
 
 ## Промпт
@@ -12,6 +14,15 @@
 https://github.com/argentezzy/botproxybridge
 и подключи к нему указанные Telegram-боты так, чтобы они ходили на локальный Bot API
 мост, а мост — в Telegram через уже существующий (или тобой установленный) tg-ws-proxy MTProto.
+
+Ссылки (обязательно используй их, install.sh tg-ws-proxy НЕ качает):
+- tg-ws-proxy: https://github.com/Flowseal/tg-ws-proxy
+- релизы: https://github.com/Flowseal/tg-ws-proxy/releases
+- CLI из исходников: https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md
+- опционально Go: https://github.com/spatiumstas/tg-ws-proxy-go
+- api_id/hash: https://my.telegram.org/apps
+- список зависимостей репо: https://github.com/argentezzy/botproxybridge/blob/main/DEPENDENCIES.md
+- INSTALL: https://github.com/argentezzy/botproxybridge/blob/main/INSTALL.md
 
 ЖЁСТКИЕ ПРАВИЛА:
 - Не печатай токены, api_hash, MTPROXY_SECRET в чат/логи доступа.
@@ -27,7 +38,9 @@ https://github.com/argentezzy/botproxybridge
 - TELEGRAM_API_HASH=…
 - ALLOWED_BOT_TOKENS=token1,token2   # боты, которые пойдут через мост
 - MTPROXY: если tg-ws-proxy уже на 127.0.0.1:1443 — используй его и secret из /etc/tg-ws-proxy/secret
-  иначе установи tg-ws-proxy CLI, secret 32-hex, systemd на 127.0.0.1:1443
+  иначе скачай/поставь с https://github.com/Flowseal/tg-ws-proxy/releases
+  (или CLI по BuildFromSource), secret 32-hex, systemd на 127.0.0.1:1443 MTProto
+  (не SOCKS5)
 - LISTEN_PORT=8096
 - Пути ботов на сервере (если есть): …
   Для каждого бота: выставить TELEGRAM_API_BASE на мост и очистить TELEGRAM_PROXY_URL.

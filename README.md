@@ -10,22 +10,38 @@
 bot  →  :8096 BotProxyBridge  →  Telethon  →  :1443 tg-ws-proxy  →  Telegram
 ```
 
-[Установка](#установка) · [Требования](#требования) · [Подключение бота](#подключение-бота) · [Методы](#методы) · [Промпт для AI](AI_INSTALL_PROMPT.md) · [Подробнее](INSTALL.md)
+[Установка](#установка) · [Требования](#требования) · [Что скачать](#что-скачать) · [Подключение бота](#подключение-бота) · [Методы](#методы) · [Промпт для AI](AI_INSTALL_PROMPT.md) · [INSTALL](INSTALL.md) · [DEPENDENCIES](DEPENDENCIES.md)
 
 ## Требования
 
 - Linux, Python **3.11+**, systemd, sudo
 - Рабочий **tg-ws-proxy** (MTProto) на `127.0.0.1:1443` — не SOCKS5 под Bot API
 - `api_id` / `api_hash` с [my.telegram.org/apps](https://my.telegram.org/apps)
-- Токены ботов для `ALLOWED_BOT_TOKENS`
+- Токены ботов для `ALLOWED_BOT_TOKENS` (от [@BotFather](https://t.me/BotFather))
 - Порты по умолчанию: **1443** (прокси), **8096** (мост)
+
+## Что скачать
+
+`install.sh` **не** качает tg-ws-proxy. Ссылки списком: **[DEPENDENCIES.md](DEPENDENCIES.md)**.
+
+| Обязательно | URL |
+|---|---|
+| tg-ws-proxy | https://github.com/Flowseal/tg-ws-proxy |
+| релизы | https://github.com/Flowseal/tg-ws-proxy/releases |
+| CLI из исходников | https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md |
+| api_id / api_hash | https://my.telegram.org/apps |
+| BotProxyBridge | https://github.com/argentezzy/botproxybridge |
+| Telethon / aiohttp | через `pip` из [`requirements.txt`](requirements.txt) |
+
+Опционально (Go-порт): https://github.com/spatiumstas/tg-ws-proxy-go
 
 ## Установка
 
 Полный разбор: [INSTALL.md](INSTALL.md).
 
 ```bash
-# 1) tg-ws-proxy уже слушает 127.0.0.1:1443, secret в /etc/tg-ws-proxy/secret (или в .env)
+# 1) tg-ws-proxy → https://github.com/Flowseal/tg-ws-proxy/releases
+#    слушает 127.0.0.1:1443, secret в /etc/tg-ws-proxy/secret (или в .env)
 
 # 2) мост
 git clone https://github.com/argentezzy/botproxybridge.git /opt/botproxybridge
@@ -86,9 +102,10 @@ TELEGRAM_API_BASE=http://host.docker.internal:8096, TELEGRAM_PROXY_URL очис�
 | | |
 |---|---|
 | [INSTALL.md](INSTALL.md) | установка, Docker, отладка |
+| [DEPENDENCIES.md](DEPENDENCIES.md) | ссылки: что скачать |
 | [AI_INSTALL_PROMPT.md](AI_INSTALL_PROMPT.md) | промпт агенту |
 | [.env.example](.env.example) | конфиг |
-| [scripts/install.sh](scripts/install.sh) | инсталлятор |
+| [scripts/install.sh](scripts/install.sh) | инсталлятор (только мост) |
 | [deploy/botproxybridge.service](deploy/botproxybridge.service) | systemd |
 
 ## Thanks

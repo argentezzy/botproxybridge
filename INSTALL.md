@@ -14,21 +14,42 @@
 
 ## 1. Установить tg-ws-proxy (MTProto)
 
-Мост **не** заменяет tg-ws-proxy. Без него Telethon не достучится до DC.
+Мост **не** качает и **не** заменяет tg-ws-proxy. Без него Telethon не достучится до DC.  
+Полный список ссылок: [DEPENDENCIES.md](DEPENDENCIES.md).
 
-Вариант A — уже есть Flowseal / CLI `tg-ws-proxy` на хосте:
+### Ссылки
+
+| | URL |
+|---|---|
+| Репозиторий | https://github.com/Flowseal/tg-ws-proxy |
+| Релизы (бинари) | https://github.com/Flowseal/tg-ws-proxy/releases |
+| CLI из исходников | https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md |
+| Go-порт (опционально) | https://github.com/spatiumstas/tg-ws-proxy-go |
+
+Нужен режим **MTProto** на `127.0.0.1:1443`. SOCKS5-режим для Bot API HTTPS не используем.
+
+Вариант A — уже стоит:
 
 ```bash
 ss -lntp | grep 1443
 # ожидаем LISTEN 127.0.0.1:1443
 ```
 
-Вариант B — поставить CLI (пример, проверьте актуальный релиз проекта tg-ws-proxy):
+Вариант B — релиз с GitHub:
 
-1. Скачайте linux amd64 бинарь
-2. Сгенерируйте secret (32 hex)
-3. Сохраните secret в `/etc/tg-ws-proxy/secret` (chmod 600)
-4. Запустите как systemd unit `tg-ws-proxy.service` на `127.0.0.1:1443`
+1. Скачайте linux-сборку с https://github.com/Flowseal/tg-ws-proxy/releases
+2. Зафиксируйте secret (32 hex)
+3. Сохраните в `/etc/tg-ws-proxy/secret` (`chmod 600`)
+4. Запустите systemd unit на `127.0.0.1:1443`
+
+Вариант C — CLI из исходников (см. [BuildFromSource](https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md)):
+
+```bash
+git clone https://github.com/Flowseal/tg-ws-proxy.git
+cd tg-ws-proxy
+pip install -e .
+tg-ws-proxy --host 127.0.0.1 --port 1443 --secret <32hex>
+```
 
 **Важно для Telethon:** в `.env` моста `MTPROXY_SECRET` — **сырой 32-hex**, без префиксов `dd`/`ee`.  
 Если secret в файле с `dd…`, мост сам обрежет префикс.
@@ -37,11 +58,10 @@ ss -lntp | grep 1443
 
 ---
 
-## 2. API ID / API Hash
+## 2. API ID / API Hash и токены
 
-1. Зайдите на https://my.telegram.org/apps
-2. Создайте приложение (platform: Other)
-3. Скопируйте `api_id` и `api_hash`
+1. https://my.telegram.org/apps — создать приложение (platform: Other), взять `api_id` / `api_hash`
+2. https://t.me/BotFather — токены ботов → `ALLOWED_BOT_TOKENS` (через запятую)
 
 Один `api_id`/`api_hash` можно использовать для нескольких бот-токенов на одном мосте (у каждого токена своя Telethon-сессия).
 
