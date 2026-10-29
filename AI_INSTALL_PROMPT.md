@@ -15,14 +15,17 @@ https://github.com/argentezzy/botproxybridge
 и подключи к нему указанные Telegram-боты так, чтобы они ходили на локальный Bot API
 мост, а мост — в Telegram через уже существующий (или тобой установленный) tg-ws-proxy MTProto.
 
-Ссылки (обязательно используй их, install.sh tg-ws-proxy НЕ качает):
+Ссылки:
 - tg-ws-proxy: https://github.com/Flowseal/tg-ws-proxy
 - релизы: https://github.com/Flowseal/tg-ws-proxy/releases
 - CLI из исходников: https://github.com/Flowseal/tg-ws-proxy/blob/main/docs/EN/BuildFromSource.md
 - опционально Go: https://github.com/spatiumstas/tg-ws-proxy-go
 - api_id/hash: https://my.telegram.org/apps
-- список зависимостей репо: https://github.com/argentezzy/botproxybridge/blob/main/DEPENDENCIES.md
+- DEPENDENCIES: https://github.com/argentezzy/botproxybridge/blob/main/DEPENDENCIES.md
 - INSTALL: https://github.com/argentezzy/botproxybridge/blob/main/INSTALL.md
+
+install.sh по умолчанию (WITH_TG_WS_PROXY=auto) сам ставит Flowseal CLI, если :1443 свободен.
+Если прокси уже есть — не переустанавливай. Не ставь Zapret-Manager.
 
 ЖЁСТКИЕ ПРАВИЛА:
 - Не печатай токены, api_hash, MTPROXY_SECRET в чат/логи доступа.
@@ -54,7 +57,8 @@ https://github.com/argentezzy/botproxybridge
 2) Убедись что tg-ws-proxy MTProto жив; если нет — поставь и проверь.
 3) git clone https://github.com/argentezzy/botproxybridge.git /opt/botproxybridge
    (если каталог есть — git pull).
-4) Запусти sudo ./scripts/install.sh ИЛИ эквивалент: venv, pip, systemd unit botproxybridge.
+4) Запусти sudo ./scripts/install.sh (auto поставит tg-ws-proxy при необходимости).
+   Или WITH_TG_WS_PROXY=0/1 sudo -E ./scripts/install.sh.
 5) Запиши /opt/botproxybridge/.env (chmod 600) из параметров выше.
 6) systemctl restart botproxybridge; дождись getMe по каждому токену (username в ответе).
 7) Подключи указанных ботов к TELEGRAM_API_BASE моста; перезапусти контейнеры/сервисы.

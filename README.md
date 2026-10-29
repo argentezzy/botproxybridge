@@ -35,20 +35,20 @@ bot  →  :8096 BotProxyBridge  →  Telethon  →  :1443 tg-ws-proxy  →  Tele
 
 Опционально (Go-порт): https://github.com/spatiumstas/tg-ws-proxy-go
 
+`install.sh` по умолчанию (`WITH_TG_WS_PROXY=auto`) сам ставит Flowseal CLI, если порт **1443 свободен**. Если прокси уже есть — не трогает.
+
 ## Установка
 
 Полный разбор: [INSTALL.md](INSTALL.md).
 
 ```bash
-# 1) tg-ws-proxy → https://github.com/Flowseal/tg-ws-proxy/releases
-#    слушает 127.0.0.1:1443, secret в /etc/tg-ws-proxy/secret (или в .env)
-
-# 2) мост
 git clone https://github.com/argentezzy/botproxybridge.git /opt/botproxybridge
 cd /opt/botproxybridge
-chmod +x scripts/install.sh
+chmod +x scripts/install.sh scripts/install-tg-ws-proxy.sh
 sudo ./scripts/install.sh
-sudo nano /opt/botproxybridge/.env   # см. .env.example
+# принудительно без прокси:  WITH_TG_WS_PROXY=0 sudo -E ./scripts/install.sh
+# принудительно с прокси:   WITH_TG_WS_PROXY=1 sudo -E ./scripts/install.sh
+sudo nano /opt/botproxybridge/.env   # API_ID/HASH + ALLOWED_BOT_TOKENS
 sudo systemctl restart botproxybridge
 curl -sS http://127.0.0.1:8096/health
 curl -sS "http://127.0.0.1:8096/bot<TOKEN>/getMe"
@@ -105,7 +105,8 @@ TELEGRAM_API_BASE=http://host.docker.internal:8096, TELEGRAM_PROXY_URL очис�
 | [DEPENDENCIES.md](DEPENDENCIES.md) | ссылки: что скачать |
 | [AI_INSTALL_PROMPT.md](AI_INSTALL_PROMPT.md) | промпт агенту |
 | [.env.example](.env.example) | конфиг |
-| [scripts/install.sh](scripts/install.sh) | инсталлятор (только мост) |
+| [scripts/install.sh](scripts/install.sh) | мост + auto tg-ws-proxy |
+| [scripts/install-tg-ws-proxy.sh](scripts/install-tg-ws-proxy.sh) | только Flowseal CLI |
 | [deploy/botproxybridge.service](deploy/botproxybridge.service) | systemd |
 
 ## Thanks

@@ -1,6 +1,11 @@
 # Что скачать / поставить
 
-`scripts/install.sh` ставит **только BotProxyBridge**. Остальное — отдельно.
+`scripts/install.sh` ставит **BotProxyBridge** и по умолчанию (`WITH_TG_WS_PROXY=auto`) — **Flowseal tg-ws-proxy CLI**, если на `:1443` ещё никто не слушает.
+
+- Уже есть свой прокси на 1443 → скрипт его не трогает  
+- `WITH_TG_WS_PROXY=0` → только мост  
+- `WITH_TG_WS_PROXY=1` → всегда вызвать `scripts/install-tg-ws-proxy.sh` (если порт свободен)  
+- Отдельно: `sudo ./scripts/install-tg-ws-proxy.sh`
 
 ## Обязательно
 

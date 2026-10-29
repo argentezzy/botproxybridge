@@ -14,8 +14,14 @@
 
 ## 1. Установить tg-ws-proxy (MTProto)
 
-Мост **не** качает и **не** заменяет tg-ws-proxy. Без него Telethon не достучится до DC.  
+Без MTProto на `:1443` Telethon не достучится до DC.  
 Полный список ссылок: [DEPENDENCIES.md](DEPENDENCIES.md).
+
+**Авто:** `sudo ./scripts/install.sh` при свободном `:1443` сам клонирует  
+https://github.com/Flowseal/tg-ws-proxy и поднимает `tg-ws-proxy.service`  
+(`scripts/install-tg-ws-proxy.sh`). Secret → `/etc/tg-ws-proxy/secret`, подтягивается в `.env`.
+
+Ручная установка — ниже.
 
 ### Ссылки
 
@@ -72,15 +78,16 @@ tg-ws-proxy --host 127.0.0.1 --port 1443 --secret <32hex>
 ```bash
 git clone https://github.com/argentezzy/botproxybridge.git /opt/botproxybridge
 cd /opt/botproxybridge
-chmod +x scripts/install.sh
+chmod +x scripts/install.sh scripts/install-tg-ws-proxy.sh
 sudo ./scripts/install.sh
 ```
 
 Скрипт:
 
+- при необходимости ставит Flowseal tg-ws-proxy (`WITH_TG_WS_PROXY=auto|1|0`)
 - копирует код в `/opt/botproxybridge`
 - создаёт venv и ставит зависимости
-- кладёт `.env` из `.env.example` (если ещё нет)
+- кладёт `.env` из `.env.example` (если ещё нет), синхронизирует `MTPROXY_SECRET`
 - ставит systemd unit `botproxybridge`
 - делает `enable` + `restart`
 

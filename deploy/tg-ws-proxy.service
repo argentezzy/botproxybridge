@@ -1,0 +1,15 @@
+[Unit]
+Description=tg-ws-proxy MTProto (Flowseal) for BotProxyBridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/tg-ws-proxy/env
+ExecStart=/opt/tg-ws-proxy/venv/bin/tg-ws-proxy --host 127.0.0.1 --port 1443 --secret ${TG_WS_PROXY_SECRET}
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
